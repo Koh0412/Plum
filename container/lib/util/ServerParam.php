@@ -27,4 +27,10 @@ class ServerParam {
 
     return $split_query_uri[array_key_first($split_query_uri)];
   }
+
+  public static function getParseURI()
+  {
+    $parse_uri = explode('/', ServerParam::getRequestURI());
+    return $parse_uri;
+  }
 }
