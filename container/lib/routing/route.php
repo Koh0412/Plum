@@ -23,6 +23,7 @@ class Router implements IMiddleware {
   {
 
     $this->controller_file_path = '../app/controllers/' . $this->getControllerName() . '.php';
+    $not_found_path = '../public/404.html';
 
     if (file_exists($this->controller_file_path)) {
       include($this->controller_file_path);
@@ -33,7 +34,11 @@ class Router implements IMiddleware {
         $this->routerMapping($this->post_routers);
       }
     } else {
-      header('HTTP/1.0 404 Not Found');
+      header('HTTP/1.1 404 Not Found');
+
+      if (file_exists($not_found_path)) {
+        include($not_found_path);
+      }
       exit;
     }
 
