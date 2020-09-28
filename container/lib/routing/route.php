@@ -44,13 +44,14 @@ class Router implements IMiddleware {
    * @param string $route
    * @param string $controller
    * @param string|null $action
-   * @return void
+   * @return \Plum\Routing\Router
    */
-  public function get(string $route, string $controller, ?string $action = null)
+  public function get(string $route, string $controller, ?string $action = null): Router
   {
-    $prop = $this->getProcessedProp($route, $controller, $action);
+    $router = $this->getProcessedRouter($route, $controller, $action);
     // register with get_routers
-    $this->get_routers = array_merge($this->get_routers, $prop);
+    $this->get_routers = array_merge($this->get_routers, $router);
+    return $this;
   }
 
   /**
@@ -59,13 +60,15 @@ class Router implements IMiddleware {
    * @param string $route
    * @param string $controller
    * @param string $action
-   * @return void
+   * @return \Plum\Routing\Router
+   *
    */
-  public function post(string $route, string $controller, ?string $action = null)
+  public function post(string $route, string $controller, ?string $action = null): Router
   {
-    $prop = $this->getProcessedProp($route, $controller, $action);
+    $router = $this->getProcessedRouter($route, $controller, $action);
     // register with post_routers
-    $this->post_routers = array_merge($this->post_routers, $prop);
+    $this->post_routers = array_merge($this->post_routers, $router);
+    return $this;
   }
 
   /**
@@ -73,9 +76,9 @@ class Router implements IMiddleware {
    *
    * @param string $root
    * @param array $routers
-   * @return void
+   * @return \Plum\Routing\Router
    */
-  public function group(string $root, array $routers)
+  public function group(string $root, array $routers): Router
   {
     foreach ($routers as $route => $prop) {
       $method = strtoupper($prop['method']);
@@ -94,6 +97,7 @@ class Router implements IMiddleware {
           break;
       }
     }
+    return $this;
   }
 
   /**
@@ -121,24 +125,22 @@ class Router implements IMiddleware {
    * @param string|null $action
    * @return void
    */
-  private function getProcessedProp(string $route, string $controller, ?string $action = null): array
+  private function getProcessedRouter(string $route, string $controller, ?string $action = null): array
   {
     if (is_null($action)) {
       $routing_props = explode('@', $controller);
 
-      $controller = array_shift($routing_props);
-      $controller = 'App\Controllers\\' . $controller;
-
+      $controller = 'App\Controllers\\' . array_shift($routing_props);
       $action = end($routing_props);
     }
 
-    $prop = [
+    $router = [
       $route => [
         'controller' => $controller,
         'action' => $action
         ]
     ];
-    return $prop;
+    return $router;
   }
 
   /**
@@ -147,7 +149,7 @@ class Router implements IMiddleware {
    * @param array $routers
    * @return void
    */
-  private function routerMapping($routers): void
+  private function routerMapping(array $routers): void
   {
     $response = null;
 
