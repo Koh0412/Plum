@@ -25,7 +25,7 @@ class ServerParam {
     $uri = ServerParam::getRequestURI();
     $split_query_uri = explode('?', $uri);
 
-    return $split_query_uri[array_key_first($split_query_uri)];
+    return array_shift($split_query_uri);
   }
 
   public static function getParseURI()

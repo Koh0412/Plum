@@ -19,11 +19,10 @@ class Router implements IMiddleware {
    *
    * @return void
    */
-  public function run()
+  public function run(): void
   {
 
     $this->controller_file_path = '../app/controllers/' . $this->getControllerName() . '.php';
-    $not_found_path = '../public/404.html';
 
     if (file_exists($this->controller_file_path)) {
       include($this->controller_file_path);
@@ -34,36 +33,67 @@ class Router implements IMiddleware {
         $this->routerMapping($this->post_routers);
       }
     } else {
-      header('HTTP/1.1 404 Not Found');
-
-      if (file_exists($not_found_path)) {
-        include($not_found_path);
-      }
-      exit;
+      Utility::dispNotFound();
     }
 
   }
 
-  public function get(string $route, $class, string $action)
+  /**
+   * routing get method
+   *
+   * @param string $route
+   * @param string $controller
+   * @param string|null $action
+   * @return void
+   */
+  public function get(string $route, string $controller, ?string $action = null)
   {
-    $router = [
-      $route => [
-        'class' => $class,
-        'action' => $action
-        ]
-    ];
-    $this->get_routers = array_merge($this->get_routers, $router);
+    $prop = $this->getProcessedProp($route, $controller, $action);
+    // register with get_routers
+    $this->get_routers = array_merge($this->get_routers, $prop);
   }
 
-  public function post(string $route, $class, string $action)
+  /**
+   * routing post method
+   *
+   * @param string $route
+   * @param string $controller
+   * @param string $action
+   * @return void
+   */
+  public function post(string $route, string $controller, ?string $action = null)
   {
-    $router = [
-      $route => [
-        'class' => $class,
-        'action' => $action
-      ]
-    ];
-    $this->post_routers = array_merge($this->post_routers, $router);
+    $prop = $this->getProcessedProp($route, $controller, $action);
+    // register with post_routers
+    $this->post_routers = array_merge($this->post_routers, $prop);
+  }
+
+  /**
+   * router grouping
+   *
+   * @param string $root
+   * @param array $routers
+   * @return void
+   */
+  public function group(string $root, array $routers)
+  {
+    foreach ($routers as $route => $prop) {
+      $method = strtoupper($prop['method']);
+
+      $route = $root . $route;
+      $action = $prop['action'] ?? null;
+
+      switch ($method) {
+        case 'GET':
+          $this->get($route, $prop['controller'], $action);
+          break;
+        case 'POST':
+          $this->post($route, $prop['controller'], $action);
+          break;
+        default:
+          break;
+      }
+    }
   }
 
   /**
@@ -84,6 +114,34 @@ class Router implements IMiddleware {
   }
 
   /**
+   * process and return router properties
+   *
+   * @param string $route
+   * @param string $controller
+   * @param string|null $action
+   * @return void
+   */
+  private function getProcessedProp(string $route, string $controller, ?string $action = null): array
+  {
+    if (is_null($action)) {
+      $routing_props = explode('@', $controller);
+
+      $controller = array_shift($routing_props);
+      $controller = 'App\Controllers\\' . $controller;
+
+      $action = end($routing_props);
+    }
+
+    $prop = [
+      $route => [
+        'controller' => $controller,
+        'action' => $action
+        ]
+    ];
+    return $prop;
+  }
+
+  /**
    * router mapping
    *
    * @param array $routers
@@ -94,9 +152,9 @@ class Router implements IMiddleware {
     $response = null;
 
     foreach ($routers as $route => $prop) {
-      if ($route === ServerParam::getRequestURI()) {
+      if ($route === ServerParam::getRequestURINoQuery()) {
         try {
-          $instance = Utility::getInstance($prop['class']);
+          $instance = Utility::getInstance($prop['controller']);
           $action = $prop['action'];
 
           $response = $instance->$action();
@@ -120,8 +178,8 @@ class Router implements IMiddleware {
 
     foreach ($routers as $route => $value) {
       if ($route === ServerParam::getRequestURINoQuery()) {
-        $parse_namespace = explode('\\', $value['class']);
-        $controller_name = $parse_namespace[array_key_last($parse_namespace)];
+        $parse_namespace = explode('\\', $value['controller']);
+        $controller_name = end($parse_namespace);
       };
     }
     return $controller_name;
