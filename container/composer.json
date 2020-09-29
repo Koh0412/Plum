@@ -9,6 +9,9 @@
         "psr-4": {
             "Plum\\": "lib/",
             "App\\": "app/"
-        }
+        },
+        "files": [
+            "lib/helpers.php"
+        ]
     }
 }

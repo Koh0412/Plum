@@ -2,10 +2,9 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use Plum\Util\ServerParam;
 use Plum\Foundation\HttpCore;
 
-if (empty(ServerParam::getRequestURI())) {
+if (empty(request()->getUri())) {
   exit;
 }
 

@@ -3,7 +3,6 @@
 namespace Plum\Routing;
 
 use Plum\Util\IMiddleware;
-use Plum\Util\ServerParam;
 use Plum\Util\Utility;
 use Throwable;
 
@@ -21,13 +20,12 @@ class Router implements IMiddleware {
    */
   public function run(): void
   {
-
     $this->controller_file_path = '../app/controllers/' . $this->getControllerName() . '.php';
 
     if (file_exists($this->controller_file_path)) {
       include($this->controller_file_path);
 
-      if (ServerParam::getRequestMethod() == "GET") {
+      if (request()->methodType() == "GET") {
         $this->routerMapping($this->get_routers);
       } else {
         $this->routerMapping($this->post_routers);
@@ -109,7 +107,7 @@ class Router implements IMiddleware {
   {
     $controller_name = '';
 
-    if (ServerParam::getRequestMethod() == "GET") {
+    if (request()->methodType() == "GET") {
       $controller_name = $this->searchControllerName($this->get_routers);
     } else {
       $controller_name = $this->searchControllerName($this->post_routers);
@@ -154,7 +152,7 @@ class Router implements IMiddleware {
     $response = null;
 
     foreach ($routers as $route => $prop) {
-      if ($route === ServerParam::getRequestURINoQuery()) {
+      if ($route === request()->getUriNoQuery()) {
         try {
           $instance = Utility::getInstance($prop['controller']);
           $action = $prop['action'];
@@ -179,7 +177,7 @@ class Router implements IMiddleware {
     $controller_name = '';
 
     foreach ($routers as $route => $value) {
-      if ($route === ServerParam::getRequestURINoQuery()) {
+      if ($route === request()->getUriNoQuery()) {
         $parse_namespace = explode('\\', $value['controller']);
         $controller_name = end($parse_namespace);
       };
