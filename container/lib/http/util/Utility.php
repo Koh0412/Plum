@@ -1,6 +1,6 @@
 <?php
 
-namespace Plum\Util;
+namespace Plum\Http\Util;
 
 class Utility {
   /**

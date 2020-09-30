@@ -4,6 +4,7 @@ namespace Plum\Http;
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Plum\View\HTMLHelper;
 use Smarty;
 
 class BaseController {
@@ -41,12 +42,29 @@ class BaseController {
     $smarty->template_dir = __DIR__ . '/../../views/';
     $smarty->compile_dir  = __DIR__ . '/../../lib/tmp/';
     $smarty->escape_html  = true;
+
     $smarty->assign([]);
     $smarty->assign($param);
-    $smarty->clearCompiledTemplate();
+    $this->registerSmartyHelper($smarty, HTMLHelper::class);
 
+    $smarty->clearCompiledTemplate();
     $template = str_replace('.', '/', $template);
 
     return $smarty->fetch($template . '.tpl');
+  }
+
+  /**
+   * register helper function from `$class` method to `$smarty`
+   *
+   * @param Smarty $smarty
+   * @param string $class
+   * @return void
+   */
+  private function registerSmartyHelper(Smarty $smarty, string $class): void
+  {
+    $class_method_names = get_class_methods($class);
+    foreach ($class_method_names as $method_name) {
+      $smarty->registerPlugin('function', $method_name, [$class, $method_name]);
+    }
   }
 }

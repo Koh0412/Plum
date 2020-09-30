@@ -2,8 +2,8 @@
 
 namespace Plum\Routing;
 
-use Plum\Util\IMiddleware;
-use Plum\Util\Utility;
+use Plum\Http\Util\IMiddleware;
+use Plum\Http\Util\Utility;
 use Throwable;
 
 class Router implements IMiddleware {
