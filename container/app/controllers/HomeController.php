@@ -11,6 +11,6 @@ class HomeController extends ApplicationController {
 
   public function create()
   {
-
+    return var_dump($_POST);
   }
 }

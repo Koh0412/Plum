@@ -2,9 +2,15 @@
 
 namespace Plum\Routing;
 
+use Error;
+use Exception;
+use Plum\Foundation\Exceptions\NotMatchException;
 use Plum\Http\Util\IMiddleware;
 use Plum\Http\Util\Utility;
+use Plum\Routing\Exceptions\FileNotFoundException;
+use Plum\Routing\Exceptions\MissingSearchException;
 use Throwable;
+use TypeError;
 
 class Router implements IMiddleware {
 
@@ -31,7 +37,8 @@ class Router implements IMiddleware {
         $this->routerMapping($this->post_routers);
       }
     } else {
-      Utility::dispNotFound();
+      throw new FileNotFoundException($this->controller_file_path);
+      // Utility::dispNotFound();
     }
 
   }
@@ -105,8 +112,6 @@ class Router implements IMiddleware {
    */
   private function getControllerName(): string
   {
-    $controller_name = '';
-
     if (request()->methodType() == "GET") {
       $controller_name = $this->searchControllerName($this->get_routers);
     } else {
@@ -180,8 +185,17 @@ class Router implements IMiddleware {
       if ($route === request()->getUriNoQuery()) {
         $parse_namespace = explode('\\', $value['controller']);
         $controller_name = end($parse_namespace);
-      };
+      }
     }
+
+    if ($controller_name === '') {
+      if (empty($routers)) {
+        throw new MissingSearchException();
+      } else {
+        throw new NotMatchException('route');
+      }
+    }
+
     return $controller_name;
   }
 }

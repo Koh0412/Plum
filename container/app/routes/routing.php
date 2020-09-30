@@ -6,4 +6,6 @@ use Plum\Routing\Router;
 $router = new Router();
 
 $router->get('/', HomeController::class, 'index');
+$router->post('/', HomeController::class, 'create');
+
 $router->run();
