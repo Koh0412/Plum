@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>php fullscratch</title>
-    <link rel="stylesheet" href="./css/style.css">
-  </head>
-  <body>
-    <div>{$msg}</div>
-  </body>
-</html>
+{assign var="title" value="TOP"}
+{extends file="layouts/application.tpl"}
+
+{block name=body}
+  <div>{$msg}</div>
+  <form action="/create" method="post">
+    <input type="text" name="user[name]">
+  </form>
+{/block}
