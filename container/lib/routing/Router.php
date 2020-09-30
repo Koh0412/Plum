@@ -2,15 +2,12 @@
 
 namespace Plum\Routing;
 
-use Error;
-use Exception;
 use Plum\Foundation\Exceptions\NotMatchException;
 use Plum\Http\Util\IMiddleware;
 use Plum\Http\Util\Utility;
 use Plum\Routing\Exceptions\FileNotFoundException;
 use Plum\Routing\Exceptions\MissingSearchException;
 use Throwable;
-use TypeError;
 
 class Router implements IMiddleware {
 
