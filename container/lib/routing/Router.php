@@ -3,6 +3,7 @@
 namespace Plum\Routing;
 
 use Plum\Foundation\Exceptions\NotMatchException;
+use Plum\Http\Request;
 use Plum\Http\Util\IMiddleware;
 use Plum\Http\Util\Utility;
 use Plum\Routing\Exceptions\FileNotFoundException;
@@ -159,7 +160,7 @@ class Router implements IMiddleware {
           $instance = Utility::getInstance($prop['controller']);
           $action = $prop['action'];
 
-          $response = $instance->$action();
+          $response = $instance->$action(Request::instance());
         } catch (Throwable $th) {
           echo $th->getMessage(), "\n";
         }

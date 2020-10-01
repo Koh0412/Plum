@@ -9,9 +9,29 @@ class Request {
   private function __construct()
   {
     $this->headers = getallheaders();
+
+    // create dynamic property
+    if (isset($_POST)) {
+      foreach ($_POST as $key => $value) {
+        $this->$key = $this->post($key);
+
+        //TODO: 保留
+        // if (is_array($this->$key)) {
+        //   foreach ($this->$key as $childKey => $value) {
+        //     $merge = "{$key}_{$childKey}";
+        //     $this->$merge = $this->post($key)[$childKey];
+        //   }
+        // }
+      }
+    }
   }
 
-  public static function instance(): Request
+  /**
+   * get self instance
+   *
+   * @return Plum\Http\Request
+   */
+  public static function instance(): self
   {
     if (empty(self::$instance)) {
       self::$instance = new Request();
@@ -28,6 +48,13 @@ class Request {
     return $this->post('_method');
   }
 
+  /**
+   * run GET method
+   *
+   * @param string $name
+   * @param mixed|null $default
+   * @return void
+   */
   public function get(string $name, $default = null)
   {
     if (isset($_GET[$name])) {
@@ -36,7 +63,14 @@ class Request {
     return $default;
   }
 
-  public function post($name, $default = null)
+  /**
+   * run POST method
+   *
+   * @param string $name
+   * @param mixed|null $default
+   * @return void
+   */
+  public function post(string $name, $default = null)
   {
     if (isset($_POST[$name])) {
       return $_POST[$name];
@@ -45,6 +79,8 @@ class Request {
   }
 
   /**
+   * output all request header
+   *
    * @param null $name
    * @return array|string
    */

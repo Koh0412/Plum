@@ -4,6 +4,9 @@
 {block name=body}
   <div>{$msg}</div>
   <form action="/" method="post">
-    <input type="text" name="user[name]">
+    <div>
+      <input type="text" name="name">
+    </div>
+    <div><input type="submit" value="send"></div>
   </form>
 {/block}

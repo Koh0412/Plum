@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use Plum\Http\Request;
+
 class HomeController extends ApplicationController {
 
   public function index()
@@ -9,8 +11,8 @@ class HomeController extends ApplicationController {
     return $this->view('top', ['msg' => 'hello']);
   }
 
-  public function create()
+  public function create(Request $request)
   {
-    return var_dump($_POST);
+    return "created. name: {$request->name}";
   }
 }
