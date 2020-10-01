@@ -3,11 +3,11 @@
 namespace Plum\Routing;
 
 use Plum\Foundation\Exceptions\NotMatchException;
-use Plum\Http\Request;
 use Plum\Http\Util\IMiddleware;
-use Plum\Http\Util\Utility;
+use Plum\Foundation\Util\Reflect;
 use Plum\Routing\Exceptions\FileNotFoundException;
 use Plum\Routing\Exceptions\MissingSearchException;
+
 use Throwable;
 
 class Router implements IMiddleware {
@@ -36,7 +36,7 @@ class Router implements IMiddleware {
       }
     } else {
       throw new FileNotFoundException($this->controller_file_path);
-      // Utility::dispNotFound();
+      // ViewUtil::dispNotFound();
     }
 
   }
@@ -157,10 +157,13 @@ class Router implements IMiddleware {
     foreach ($routers as $route => $prop) {
       if ($route === request()->getUriNoQuery()) {
         try {
-          $instance = Utility::getInstance($prop['controller']);
+          $instance = Reflect::getInstance($prop['controller']);
           $action = $prop['action'];
 
-          $response = $instance->$action(Request::instance());
+          $method_args = Reflect::getMethodArgs($prop['controller'], $action);
+          $array_instance = Reflect::getArrayInstance($method_args);
+
+          $response = $instance->$action(...$array_instance);
         } catch (Throwable $th) {
           echo $th->getMessage(), "\n";
         }
