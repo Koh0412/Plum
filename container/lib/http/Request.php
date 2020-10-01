@@ -49,7 +49,7 @@ class Request {
   }
 
   /**
-   * run GET method
+   * get GET method parameter by using `$name`
    *
    * @param string $name
    * @param mixed|null $default
@@ -64,7 +64,7 @@ class Request {
   }
 
   /**
-   * run POST method
+   * get POST method parameter by using `$name`
    *
    * @param string $name
    * @param mixed|null $default
