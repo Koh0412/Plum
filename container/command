@@ -1,0 +1,12 @@
+#!/usr/bin/php
+<?php
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+use Plum\Commands\Commandprovider;
+use Symfony\Component\Console\Application;
+
+$application = new Application();
+$application->addCommands(Commandprovider::commands());
+
+$application->run();
