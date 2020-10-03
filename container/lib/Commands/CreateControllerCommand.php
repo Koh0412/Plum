@@ -3,6 +3,7 @@
 namespace Plum\Commands;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -34,11 +35,20 @@ class CreateControllerCommand extends Command {
   {
 
     get_buffer(function() use ($output, $input) {
+      $progressbar = new ProgressBar($output, 10);
+
       $controller = $input->getArgument('controller');
       $filename = "{$this->base_path}/{$controller}.php";
 
+      for ($i = 0; $i < 10; $i++) {
+        usleep(150000);
+        $progressbar->advance();
+      }
+
       file_put_contents($filename, $this->template(['controller' => $controller]));
       readfile($filename);
+
+      $output->writeln($progressbar->finish());
       $output->writeln("<info>create controller: {$controller} -> successfully.</info>");
     });
 
