@@ -89,6 +89,13 @@ class Request {
     return $_SERVER['REQUEST_URI'];
   }
 
+  public function schemeHost()
+  {
+    $scheme = $_SERVER['REQUEST_SCHEME'] ?? 'http';
+    $host = $_SERVER['HTTP_HOST'];
+    return "$scheme://$host";
+  }
+
   public function getUriNoQuery(): string
   {
     $split_query_uri = explode('?', $this->getUri());
