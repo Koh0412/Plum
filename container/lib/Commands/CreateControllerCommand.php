@@ -32,13 +32,15 @@ class CreateControllerCommand extends Command {
 
   protected function execute(InputInterface $input, OutputInterface $output)
   {
-    $controller = $input->getArgument('controller');
-    $filename = "{$this->base_path}/{$controller}.php";
 
-    file_put_contents($filename, $this->template(['controller' => $controller]));
-    readfile($filename);
+    get_buffer(function() use ($output, $input) {
+      $controller = $input->getArgument('controller');
+      $filename = "{$this->base_path}/{$controller}.php";
 
-    $output->writeln("<info>create controller: {$controller} -> successfully.</info>");
+      file_put_contents($filename, $this->template(['controller' => $controller]));
+      readfile($filename);
+      $output->writeln("<info>create controller: {$controller} -> successfully.</info>");
+    });
 
     return Command::SUCCESS;
   }
