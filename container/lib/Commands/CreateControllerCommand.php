@@ -35,18 +35,23 @@ class CreateControllerCommand extends Command {
     $controller = $input->getArgument('controller');
     $filename = "{$this->base_path}/{$controller}.php";
 
-    $text = <<<EOF
-    <?php\n
-    namespace App\Controllers;\n
-    class {$controller} extends ApplicationController {
-    }\n
-    EOF;
-
-    file_put_contents($filename, $text);
+    file_put_contents($filename, $this->template(['controller' => $controller]));
     readfile($filename);
 
     $output->writeln("<info>create controller: {$controller} -> successfully.</info>");
 
     return Command::SUCCESS;
+  }
+
+  private function template(array $data)
+  {
+    $template = <<<EOF
+    <?php\n
+    namespace App\Controllers;\n
+    class {$data['controller']} extends ApplicationController {
+    }\n
+    EOF;
+
+    return $template;
   }
 }
