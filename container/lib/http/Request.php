@@ -14,14 +14,6 @@ class Request {
     if (isset($_POST)) {
       foreach ($_POST as $key => $value) {
         $this->$key = $this->post($key);
-
-        //TODO: 保留
-        // if (is_array($this->$key)) {
-        //   foreach ($this->$key as $childKey => $value) {
-        //     $merge = "{$key}_{$childKey}";
-        //     $this->$merge = $this->post($key)[$childKey];
-        //   }
-        // }
       }
     }
   }
@@ -53,12 +45,12 @@ class Request {
    *
    * @param string $name
    * @param mixed|null $default
-   * @return void
+   * @return mixed
    */
   public function get(string $name, $default = null)
   {
     if (isset($_GET[$name])) {
-      return $_GET[$name];
+      return htmlspecialchars($_GET[$name]);
     }
     return $default;
   }
@@ -68,12 +60,12 @@ class Request {
    *
    * @param string $name
    * @param mixed|null $default
-   * @return void
+   * @return mixed
    */
   public function post(string $name, $default = null)
   {
     if (isset($_POST[$name])) {
-      return $_POST[$name];
+      return htmlspecialchars($_POST[$name]);
     }
     return $default;
   }
