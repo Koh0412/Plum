@@ -8,7 +8,7 @@ class HttpCore {
 
   public function __construct()
   {
-    $this->router_file_paths = glob('../app/routes/*.php');
+    $this->router_file_paths = glob('../config/routes.php');
   }
 
   /**
