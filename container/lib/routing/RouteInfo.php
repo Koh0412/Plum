@@ -62,7 +62,7 @@ class RouteInfo {
         $param = $this->parameter();
         $req = Request::instance();
 
-        list($class, $method) = explode("/", $handler, 2);
+        list($class, $method) = explode("@", $handler, 2);
         echo (new $class())->$method($req, $param);
         break;
     }

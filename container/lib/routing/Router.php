@@ -99,14 +99,15 @@ class Router implements IMiddleware {
   {
     // TODO: エラー処理するかどうか
     if (is_null($action)) {
-      list($controller, $action) = explode('@', $controller);
-      $controller = 'App\Controllers\\' . $controller;
+      $handler = 'App\Controllers\\' . $controller;
+    } else {
+      $handler = "$controller@$action";
     }
 
     $router = [
       'method' => $method,
       'route' => $route,
-      'handler' => "$controller/$action"
+      'handler' => $handler
     ];
     return $router;
   }
