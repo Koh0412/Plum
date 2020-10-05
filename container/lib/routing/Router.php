@@ -3,13 +3,12 @@
 namespace Plum\Routing;
 
 use Exception;
+use FastRoute\RouteCollector;
 use Plum\Http\Util\IMiddleware;
-use Plum\Foundation\Util\Reflect;
 
 class Router implements IMiddleware {
 
-  protected $get_routers = [];
-  protected $post_routers = [];
+  private $routers = [];
 
   /**
    * run routing if use this method, please set route
@@ -18,11 +17,11 @@ class Router implements IMiddleware {
    */
   public function run(): void
   {
-    if (request()->methodType() == "GET") {
-      $this->routerMapping($this->get_routers);
-    } else {
-      $this->routerMapping($this->post_routers);
-    }
+    $handlers = $this->createHandlers($this->routers);
+
+    $info = new RouteInfo($handlers);
+    // start routing
+    $info->dispatch();
   }
 
   /**
@@ -35,9 +34,9 @@ class Router implements IMiddleware {
    */
   public function get(string $route, string $controller, ?string $action = null): Router
   {
-    $router = $this->getProcessedRouter($route, $controller, $action);
+    $router = $this->createRouterObj('GET', $route, $controller, $action);
     // register with get_routers
-    $this->get_routers = array_merge($this->get_routers, $router);
+    array_push($this->routers, $router);
     return $this;
   }
 
@@ -52,9 +51,9 @@ class Router implements IMiddleware {
    */
   public function post(string $route, string $controller, ?string $action = null): Router
   {
-    $router = $this->getProcessedRouter($route, $controller, $action);
+    $router = $this->createRouterObj('POST', $route, $controller, $action);
     // register with post_routers
-    $this->post_routers = array_merge($this->post_routers, $router);
+    array_push($this->routers, $router);
     return $this;
   }
 
@@ -81,6 +80,7 @@ class Router implements IMiddleware {
           $this->post($route, $prop['controller'], $action);
           break;
         default:
+          throw new Exception('this HTTP Method is not available.');
           break;
       }
     }
@@ -88,56 +88,51 @@ class Router implements IMiddleware {
   }
 
   /**
-   * process and return router properties
+   * create router with properties
    *
    * @param string $route
    * @param string $controller
    * @param string|null $action
-   * @return void
+   * @return array
    */
-  private function getProcessedRouter(string $route, string $controller, ?string $action = null): array
+  private function createRouterObj(string $method, string $route, string $controller, ?string $action = null): array
   {
+    // TODO: エラー処理するかどうか
     if (is_null($action)) {
-      $exploded = explode('@', $controller);
-
-      $controller = 'App\Controllers\\' . array_shift($exploded);
-      $action = end($exploded);
+      list($controller, $action) = explode('@', $controller);
+      $controller = 'App\Controllers\\' . $controller;
     }
 
     $router = [
-      $route => [
-        'controller' => $controller,
-        'action' => $action
-        ]
+      'method' => $method,
+      'route' => $route,
+      'handler' => "$controller/$action"
     ];
     return $router;
   }
 
   /**
-   * router mapping
+   * create routing handler by using $routers
    *
    * @param array $routers
-   * @return void
+   * @return \Closure
    */
-  private function routerMapping(array $routers): void
+  private function createHandlers(array $routers): \Closure
   {
-    $response = null;
-
-    foreach ($routers as $route => $prop) {
-      if ($route === request()->getUriNoQuery()) {
-        try {
-          $instance = Reflect::getInstance($prop['controller']);
-          $action = $prop['action'];
-
-          $method_args = Reflect::getMethodArgs($prop['controller'], $action);
-          $array_instance = Reflect::getArrayInstance($method_args);
-
-          $response = $instance->$action(...$array_instance);
-        } catch (Exception $e) {
-          throw $e;
+    return function(RouteCollector $r) use ($routers) {
+      foreach ($routers as $value) {
+        switch ($value['method']) {
+          case 'GET':
+            $r->get($value['route'], $value['handler']);
+            break;
+          case 'POST':
+            $r->post($value['route'], $value['handler']);
+            break;
+          default:
+            throw new Exception('this HTTP Method is not available.');
+            break;
         }
-        echo $response;
       }
-    }
+    };
   }
 }
