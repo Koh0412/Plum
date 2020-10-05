@@ -9,6 +9,23 @@ use Plum\Http\Util\IMiddleware;
 class Router implements IMiddleware {
 
   private $routers = [];
+  private static $instance;
+
+  private function __construct() {}
+
+  /**
+   * get self instance
+   *
+   * @return Plum\Routing\Router
+   */
+  public static function instance(): self
+  {
+    if (empty(self::$instance)) {
+      self::$instance = new Router();
+    }
+
+    return self::$instance;
+  }
 
   /**
    * run routing if use this method, please set route

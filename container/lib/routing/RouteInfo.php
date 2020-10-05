@@ -3,7 +3,6 @@
 namespace Plum\Routing;
 
 use FastRoute\Dispatcher;
-use Plum\Http\Request;
 use Plum\View\Util\ViewUtil;
 
 use function FastRoute\cachedDispatcher;
@@ -41,9 +40,11 @@ class RouteInfo {
     return $this->info[1];
   }
 
-  public function parameter(): ?array
+  public function routeParameters(): ?\Plum\Routing\RouteParameters
   {
-    return $this->info[2] ?? null;
+    $parameters = $this->info[2] ?? null;
+    $rp = new RouteParameters($parameters);
+    return $rp;
   }
 
   public function dispatch(): void
@@ -59,11 +60,10 @@ class RouteInfo {
         break;
       case Dispatcher::FOUND:
         $handler = $this->actionHandler();
-        $param = $this->parameter();
-        $req = Request::instance();
+        $params = $this->routeParameters();
 
         list($class, $method) = explode("@", $handler, 2);
-        echo (new $class())->$method($req, $param);
+        echo (new $class())->$method(request(), $params);
         break;
     }
   }

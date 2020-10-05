@@ -2,14 +2,11 @@
 
 namespace Plum\Foundation;
 
+use Plum\Foundation\Util\Reflect;
+
 class HttpCore {
 
-  protected $router_file_paths = [];
-
-  public function __construct()
-  {
-    $this->router_file_paths = glob('../config/routes.php');
-  }
+  public function __construct() {}
 
   /**
    * handling request.
@@ -18,8 +15,13 @@ class HttpCore {
    */
   public function run(): void
   {
-    foreach ($this->router_file_paths as $file_path) {
-      include($file_path);
+    $containers = include('../config/containers.php');
+
+    include('../config/routes.php');
+
+    foreach ($containers as $name => $container) {
+      $instance = Reflect::getInstance($container);
+      $instance->run();
     }
   }
 }

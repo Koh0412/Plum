@@ -1,11 +1,8 @@
 <?php
 
 use App\Controllers\HomeController;
-use Plum\Routing\Router;
 
-$router = new Router();
+$router = router();
 
 $router->get('/', HomeController::class, 'index');
 $router->post('/', HomeController::class, 'create');
-
-$router->run();
