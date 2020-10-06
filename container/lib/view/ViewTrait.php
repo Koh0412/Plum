@@ -1,9 +1,9 @@
 <?php
 
-namespace Plum\View\Util;
+namespace Plum\View;
 
-class ViewUtil {
-  public static function dispNotFound()
+trait ViewTrait {
+  public function dispNotFound()
   {
     $not_found_path = '../public/404.html';
     header('HTTP/1.1 404 Not Found');

@@ -3,11 +3,12 @@
 namespace Plum\Routing;
 
 use FastRoute\Dispatcher;
-use Plum\View\Util\ViewUtil;
+use Plum\View\ViewTrait;
 
 use function FastRoute\cachedDispatcher;
 
 class RouteInfo {
+  use ViewTrait;
 
   protected $uri;
   protected $http_method;
@@ -53,7 +54,7 @@ class RouteInfo {
 
     switch ($this->responseId()) {
       case Dispatcher::NOT_FOUND:
-        ViewUtil::dispNotFound();
+        $this->dispNotFound();
         break;
       case Dispatcher::METHOD_NOT_ALLOWED:
         echo 'Not Allowed Http Request';

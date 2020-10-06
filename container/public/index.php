@@ -2,11 +2,11 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use Plum\Foundation\HttpCore;
+use Plum\Foundation\CoreApplication;
 
 if (empty(request()->getUri())) {
   exit;
 }
 
-$httpCore = new HttpCore();
-$httpCore->run();
+$app = new CoreApplication();
+$app->run();

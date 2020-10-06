@@ -4,7 +4,7 @@ namespace Plum\Foundation;
 
 use Plum\Foundation\Util\Reflect;
 
-class HttpCore {
+class CoreApplication {
 
   public function __construct() {}
 
