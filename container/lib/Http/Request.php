@@ -13,7 +13,7 @@ class Request {
     // create dynamic property
     if (isset($_POST)) {
       foreach ($_POST as $key => $value) {
-        $this->$key = $this->post($key);
+        $this->$key = $value;
       }
     }
   }
@@ -32,12 +32,12 @@ class Request {
     return self::$instance;
   }
 
-  public function methodType(): string
+  public function method(): string
   {
-    if (is_null($this->post('_method'))) {
+    if (is_null($this->formData()->value('_method'))) {
       return $_SERVER['REQUEST_METHOD'];
     }
-    return $this->post('_method');
+    return $this->formData()->value('_method');
   }
 
   /**
@@ -47,7 +47,7 @@ class Request {
    * @param mixed|null $default
    * @return mixed
    */
-  public function get(string $name, $default = null)
+  public function query(string $name, $default = null)
   {
     if (isset($_GET[$name])) {
       return htmlspecialchars($_GET[$name]);
@@ -56,18 +56,14 @@ class Request {
   }
 
   /**
-   * get POST method parameter by using `$name`
+   * get FormData class
    *
-   * @param string $name
-   * @param mixed|null $default
-   * @return mixed
+   * @return \Plum\Http\FormData
    */
-  public function post(string $name, $default = null)
+  public function formData(): \Plum\Http\FormData
   {
-    if (isset($_POST[$name])) {
-      return htmlspecialchars($_POST[$name]);
-    }
-    return $default;
+    $formData = new FormData();
+    return $formData;
   }
 
   /**
@@ -84,18 +80,33 @@ class Request {
     return empty($this->headers[$name]) ? '' : $this->headers[$name];
   }
 
+  /**
+   * get request uri with query
+   *
+   * @return string
+   */
   public function getUri(): string
   {
     return $_SERVER['REQUEST_URI'];
   }
 
-  public function schemeHost()
+  /**
+   * return string that join request scheme and host name
+   *
+   * @return string
+   */
+  public function schemeHost(): string
   {
     $scheme = $_SERVER['REQUEST_SCHEME'] ?? 'http';
     $host = $_SERVER['HTTP_HOST'];
     return "$scheme://$host";
   }
 
+  /**
+   * get request uri without query
+   *
+   * @return string
+   */
   public function getUriNoQuery(): string
   {
     $split_query_uri = explode('?', $this->getUri());

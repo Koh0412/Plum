@@ -13,12 +13,13 @@ class RouteInfo {
   protected $uri;
   protected $http_method;
 
+  /** @var \FastRoute\Dispatcher $dispatcher */
   private $dispatcher;
   private $info;
 
   public function __construct(\Closure $handlers) {
     $this->uri = request()->getUri();
-    $this->http_method = request()->methodType();
+    $this->http_method = request()->method();
 
     $this->dispatcher = cachedDispatcher($handlers, [
       'cacheFile' => __DIR__ . '/route.cache',
