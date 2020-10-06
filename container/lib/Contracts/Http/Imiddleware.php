@@ -1,6 +1,6 @@
 <?php
 
-namespace Plum\Http\Util;
+namespace Plum\Contracts\Http;
 
 interface IMiddleware {
   public function run();

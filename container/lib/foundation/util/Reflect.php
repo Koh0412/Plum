@@ -2,7 +2,7 @@
 
 namespace Plum\Foundation\Util;
 
-use Plum\Foundation\Exceptions\ArgumentsError;
+use Plum\Foundation\ArgumentsError;
 use ReflectionClass;
 
 class Reflect {

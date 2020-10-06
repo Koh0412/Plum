@@ -1,6 +1,6 @@
 <?php
 
-namespace Plum\Foundation\Exceptions;
+namespace Plum\Foundation;
 
 use Exception;
 

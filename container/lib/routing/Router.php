@@ -4,7 +4,7 @@ namespace Plum\Routing;
 
 use Exception;
 use FastRoute\RouteCollector;
-use Plum\Http\Util\IMiddleware;
+use Plum\Contracts\Http\IMiddleware;
 
 class Router implements IMiddleware {
 

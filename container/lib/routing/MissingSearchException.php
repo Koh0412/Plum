@@ -1,6 +1,6 @@
 <?php
 
-namespace Plum\Routing\Exceptions;
+namespace Plum\Routing;
 
 use Exception;
 
