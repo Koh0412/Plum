@@ -40,7 +40,7 @@ class BaseController {
     $smarty = new Smarty();
 
     $smarty->template_dir = __DIR__ . '/../../views/';
-    $smarty->compile_dir  = __DIR__ . '/../../lib/tmp/';
+    $smarty->compile_dir  = __DIR__ . '/../../var/cache/views';
     $smarty->escape_html  = true;
 
     $smarty->assign([]);
