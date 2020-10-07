@@ -27,21 +27,41 @@ class RouteInfo {
     ]);
   }
 
+  /**
+   * return info about fast route dispatcher
+   *
+   * @return array
+   */
   public function getInfo(): array
   {
     return $this->info;
   }
 
+  /**
+   * response id that return from the dispatcher
+   *
+   * @return integer
+   */
   public function responseId(): int
   {
     return $this->info[0];
   }
 
+  /**
+   * return action hadnler that is specified to routing
+   *
+   * @return string
+   */
   public function actionHandler(): string
   {
     return $this->info[1];
   }
 
+  /**
+   * return route parameter that specify in routing file
+   *
+   * @return \Plum\Routing\RouteParameters|null
+   */
   public function routeParameters(): ?\Plum\Routing\RouteParameters
   {
     $parameters = $this->info[2] ?? null;
@@ -49,24 +69,38 @@ class RouteInfo {
     return $rp;
   }
 
+  /**
+   * dispatch routing. this is sepalating by response id
+   *
+   * @return void
+   */
   public function dispatch(): void
   {
     $this->info = $this->dispatcher->dispatch($this->http_method, $this->uri);
+    $res_id = $this->responseId();
 
-    switch ($this->responseId()) {
-      case Dispatcher::NOT_FOUND:
-        $this->dispNotFound();
-        break;
-      case Dispatcher::METHOD_NOT_ALLOWED:
-        echo 'Not Allowed Http Request';
-        break;
-      case Dispatcher::FOUND:
-        $handler = $this->actionHandler();
-        $params = $this->routeParameters();
+    $dispatcher_map = array(
+      Dispatcher::NOT_FOUND => function() { $this->dispNotFound(); },
+      Dispatcher::METHOD_NOT_ALLOWED => function() { echo 'Not Allowed Http Request'; },
+      Dispatcher::FOUND => function() { $this->foundPageHandler(); }
+    );
 
-        list($class, $method) = explode("@", $handler, 2);
-        echo (new $class())->$method(request(), $params);
-        break;
-    }
+    $excute_handler = $dispatcher_map[$res_id];
+
+    if (isset($excute_handler)) { $excute_handler(); }
+  }
+
+  /**
+   * run handling when server is found a page that is defining
+   *
+   * @return void
+   */
+  private function foundPageHandler(): void
+  {
+    $handler = $this->actionHandler();
+    $params = $this->routeParameters();
+
+    list($class, $method) = explode("@", $handler, 2);
+    echo (new $class())->$method(request(), $params);
   }
 }

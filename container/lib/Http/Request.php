@@ -2,11 +2,12 @@
 
 namespace Plum\Http;
 
-class Request {
-  private static $instance;
+use Plum\Foundation\BaseService;
+
+class Request extends BaseService {
   private $headers = [];
 
-  private function __construct()
+  protected function __construct()
   {
     $this->headers = getallheaders();
 
@@ -25,11 +26,7 @@ class Request {
    */
   public static function instance(): self
   {
-    if (empty(self::$instance)) {
-      self::$instance = new Request();
-    }
-
-    return self::$instance;
+    return self::callStaticInstance('request');
   }
 
   public function method(): string
