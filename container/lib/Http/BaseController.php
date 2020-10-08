@@ -24,7 +24,7 @@ class BaseController {
   {
     $Logger = new Logger('logger');
 
-    $Logger->pushHandler(new StreamHandler(__DIR__ . '/../../logs/' . $file_name, Logger::INFO));
+    $Logger->pushHandler(new StreamHandler('../var/log/' . $file_name, Logger::INFO));
     $Logger->info($message);
   }
 
@@ -39,8 +39,8 @@ class BaseController {
   {
     $smarty = new Smarty();
 
-    $smarty->template_dir = __DIR__ . '/../../views/';
-    $smarty->compile_dir  = __DIR__ . '/../../var/cache/views';
+    $smarty->template_dir = '../views/';
+    $smarty->compile_dir  = '../var/cache/views';
     $smarty->escape_html  = true;
 
     $smarty->assign([]);
