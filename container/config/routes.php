@@ -6,3 +6,5 @@ $router = router();
 
 $router->get('/', HomeController::class, 'index');
 $router->post('/', HomeController::class, 'create');
+
+return $router;
