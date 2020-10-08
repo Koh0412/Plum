@@ -3,11 +3,12 @@
 namespace Plum\Routing;
 
 use FastRoute\Dispatcher;
+use Plum\Foundation\BaseService;
 use Plum\View\ViewTrait;
 
 use function FastRoute\cachedDispatcher;
 
-class RouteInfo {
+class RouteInfo extends BaseService {
   use ViewTrait;
 
   protected $uri;
@@ -77,17 +78,14 @@ class RouteInfo {
   public function dispatch(): void
   {
     $this->info = $this->dispatcher->dispatch($this->http_method, $this->uri);
-    $res_id = $this->responseId();
 
-    $dispatcher_map = array(
+    $map = array(
       Dispatcher::NOT_FOUND => function() { $this->dispNotFound(); },
       Dispatcher::METHOD_NOT_ALLOWED => function() { echo 'Not Allowed Http Request'; },
       Dispatcher::FOUND => function() { $this->foundPageHandler(); }
     );
 
-    $excute_handler = $dispatcher_map[$res_id];
-
-    if (isset($excute_handler)) { $excute_handler(); }
+    $this->lookForMap($this->responseId(), $map);
   }
 
   /**

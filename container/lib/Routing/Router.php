@@ -2,7 +2,6 @@
 
 namespace Plum\Routing;
 
-use Exception;
 use FastRoute\RouteCollector;
 use Plum\Contracts\Http\IMiddleware;
 use Plum\Foundation\BaseService;
@@ -80,12 +79,11 @@ class Router extends BaseService implements IMiddleware {
   public function group(string $root, array $routers): Router
   {
     foreach ($routers as $route => $prop) {
-      $method = strtoupper($prop['method']);
-
       $route = $root . $route;
       $action = $prop['action'] ?? null;
 
-      $method_map = array(
+      $condition = strtoupper($prop['method']);
+      $map = array(
         'GET' => function() use ($route, $prop, $action) {
           $this->get($route, $prop['controller'], $action);
         },
@@ -94,7 +92,7 @@ class Router extends BaseService implements IMiddleware {
         }
       );
 
-      $this->httpMethodHandling($method, $method_map);
+      $this->lookForMap($condition, $map);
     }
     return $this;
   }
@@ -109,11 +107,10 @@ class Router extends BaseService implements IMiddleware {
    */
   private function createRouterObj(string $method, string $route, string $controller, ?string $action = null): array
   {
-    // TODO: エラー処理するかどうか
     if (is_null($action)) {
       $handler = 'App\Controllers\\' . $controller;
     } else {
-      $handler = "$controller@$action";
+      $handler = "{$controller}@{$action}";
     }
 
     $router = [
@@ -134,14 +131,14 @@ class Router extends BaseService implements IMiddleware {
   {
     return function(RouteCollector $r) use ($routers) {
       foreach ($routers as $value) {
-        $method = $value['method'];
+        $condition = $value['method'];
 
-        $method_map = array(
+        $map = array(
           'GET' => $this->callFastRouteHttpMethod('get', $r, $value),
           'POST' => $this->callFastRouteHttpMethod('post', $r, $value)
         );
 
-        $this->httpMethodHandling($method, $method_map);
+        $this->lookForMap($condition, $map);
       }
     };
   }
@@ -160,24 +157,5 @@ class Router extends BaseService implements IMiddleware {
     return function() use ($method_name, $rc, $value) {
       $rc->$method_name($value['route'], $value['handler']);
     };
-  }
-
-  /**
-   * method handling.
-   * Check if there is a `$map` of the `$http_method` and execute if it exists
-   *
-   * @param string $http_method
-   * @param array $map
-   * @return void
-   */
-  private function httpMethodHandling(string $http_method, array $map): void
-  {
-    $excute_method = $map[$http_method];
-
-    if (isset($excute_method)) {
-      $excute_method();
-    } else {
-      throw new Exception('this HTTP Method is not available.');
-    }
   }
 }
