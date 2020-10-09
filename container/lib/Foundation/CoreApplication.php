@@ -12,9 +12,9 @@ class CoreApplication {
 
   public function __construct() {
     //TODO: 一旦コメントアウト
-    // ORM::configure('mysql:host=db;dbname=laravel-trello;charset=utf8');
-    // ORM::configure('username', 'root');
-    // ORM::configure('password', 'secret');
+    // ORM::configure('mysql:host={DB_HOST};dbname={DB_NAME};charset=utf8');
+    // ORM::configure('username', {DB_USER});
+    // ORM::configure('password', {DB_PASSWORD});
   }
 
   /**
