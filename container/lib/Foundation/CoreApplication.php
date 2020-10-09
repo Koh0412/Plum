@@ -2,13 +2,20 @@
 
 namespace Plum\Foundation;
 
+use ORM;
+use Plum\Environment\Env;
 use Plum\Foundation\Util\Reflect;
 
 class CoreApplication {
 
   protected $base_path;
 
-  public function __construct() {}
+  public function __construct() {
+    //TODO: 一旦コメントアウト
+    // ORM::configure('mysql:host=db;dbname=laravel-trello;charset=utf8');
+    // ORM::configure('username', 'root');
+    // ORM::configure('password', 'secret');
+  }
 
   /**
    * set base path that is used for read files
@@ -30,8 +37,9 @@ class CoreApplication {
    */
   public function run(): void
   {
-    $containers = require $this->configPath().'containers.php';
+    Env::setPath($this->base_path);
 
+    $containers = require $this->configPath().'containers.php';
     require $this->configPath().'routes.php';
 
     foreach ($containers as $name => $container) {

@@ -1,5 +1,9 @@
 /vendor
 /lib/Tmp
 
+# var
 /var/log/*.log
 /var/cache/views/*.php
+
+# env file
+/.env
