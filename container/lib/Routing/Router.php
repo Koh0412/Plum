@@ -110,7 +110,7 @@ class Router extends BaseService implements IMiddleware {
     if (is_null($action)) {
       $handler = 'App\Controllers\\' . $controller;
     } else {
-      $handler = "{$controller}@{$action}";
+      $handler = $controller.static::METHOD_DELIMITER.$action;
     }
 
     $router = [

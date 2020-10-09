@@ -9,4 +9,6 @@ if (empty(request()->getUri())) {
 }
 
 $app = new CoreApplication();
+
+$app->setBasePath(__DIR__.'/../');
 $app->run();

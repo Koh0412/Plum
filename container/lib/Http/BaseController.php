@@ -11,6 +11,8 @@ class BaseController {
 
   private $name = 'controller';
 
+  protected $template_ext = '.tpl';
+
   public function __construct() {}
 
   /**
@@ -49,9 +51,9 @@ class BaseController {
     $this->registerSmartyHelper($smarty, 'function', FunctionHelper::class);
 
     $smarty->clearCompiledTemplate();
-    $template = str_replace('.', '/', $template);
+    $template = str_replace('.', DIRECTORY_SEPARATOR, $template);
 
-    return $smarty->fetch($template . '.tpl');
+    return $smarty->fetch($template . $this->template_ext);
   }
 
   /**

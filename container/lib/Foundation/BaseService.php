@@ -6,6 +6,7 @@ use Exception;
 
 class BaseService {
   protected static $_instances = [];
+  protected const METHOD_DELIMITER = '@';
 
   protected static function callStaticInstance(string $key)
   {
