@@ -8,7 +8,7 @@ if (empty(request()->getUri())) {
   exit;
 }
 
-$app = new CoreApplication();
+$home = __DIR__.DIRECTORY_SEPARATOR.UP_DIRECTORY;
 
-$app->setBasePath(__DIR__.'/../');
+$app = new CoreApplication($home);
 $app->run();

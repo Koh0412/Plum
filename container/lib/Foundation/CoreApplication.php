@@ -2,19 +2,19 @@
 
 namespace Plum\Foundation;
 
-use ORM;
 use Plum\Environment\Env;
 use Plum\Foundation\Util\Reflect;
+use Plum\Routing\FileNotFoundException;
 
 class CoreApplication {
 
   protected $base_path;
 
-  public function __construct() {
-    //TODO: 一旦コメントアウト
-    // ORM::configure('mysql:host={DB_HOST};dbname={DB_NAME};charset=utf8');
-    // ORM::configure('username', {DB_USER});
-    // ORM::configure('password', {DB_PASSWORD});
+  public function __construct(string $base_path) {
+    $this->base_path = $base_path;
+    Env::setPath($this->base_path);
+
+    $this->boot();
   }
 
   /**
@@ -23,10 +23,24 @@ class CoreApplication {
    * @param string $path
    * @return void
    */
-  public function setBasePath(string $path)
+  public function setBasePath(string $path): void
   {
     if (is_null($this->base_path)) {
       $this->base_path = $path;
+    }
+  }
+
+  /**
+   * boot processer. this start application create
+   *
+   * @return void
+   */
+  public function boot(): void
+  {
+    $boots = require $this->configFile('boot');
+    foreach ($boots as $boot) {
+      $instance = Reflect::getInstance($boot);
+      $instance->boot();
     }
   }
 
@@ -37,12 +51,10 @@ class CoreApplication {
    */
   public function run(): void
   {
-    Env::setPath($this->base_path);
+    $containers = require $this->configFile('containers');
+    require $this->configFile('routes');
 
-    $containers = require $this->configPath().'containers.php';
-    require $this->configPath().'routes.php';
-
-    foreach ($containers as $name => $container) {
+    foreach ($containers as $container) {
       $instance = Reflect::getInstance($container);
       $instance->run();
     }
@@ -51,10 +63,15 @@ class CoreApplication {
   /**
    * get config path
    *
-   * @return void
+   * @return string
    */
-  protected function configPath()
+  protected function configFile(string $file): string
   {
-    return $this->base_path.'config'.DIRECTORY_SEPARATOR;
+    $path = $this->base_path.'config'.DIRECTORY_SEPARATOR.$file.'.php';
+    if (file_exists($path)) {
+      return $path;
+    } else {
+      throw new FileNotFoundException($path);
+    }
   }
 }

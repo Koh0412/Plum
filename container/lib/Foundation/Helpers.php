@@ -1,5 +1,7 @@
 <?php
 
+const UP_DIRECTORY = '../';
+
 if (!function_exists('request')) {
 
   function request() {
