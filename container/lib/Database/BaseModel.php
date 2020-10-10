@@ -15,6 +15,11 @@ class BaseModel extends Model {
   protected static $_table;
   protected static $_id_column = 'id';
 
+  public static function __callStatic($name, $arguments)
+  {
+    return static::model()->$name($arguments);
+  }
+
   /**
    * This method actually returns a wrapped ORM object which allows a database query to be built
    *
