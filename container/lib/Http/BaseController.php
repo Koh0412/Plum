@@ -34,10 +34,10 @@ class BaseController {
     * create view
     *
     * @param string $template
-    * @param array $param
+    * @param array|null $param
     * @return string
     */
-  public function view(string $template, array $param): string
+  public function view(string $template, ?array $param = null): string
   {
     $smarty = new Smarty();
 
@@ -46,6 +46,9 @@ class BaseController {
     $smarty->escape_html  = true;
 
     $smarty->assign([]);
+    if(is_null($param)) {
+      $param = [];
+    }
     $smarty->assign($param);
 
     $this->registerSmartyHelper($smarty, 'function', FunctionHelper::class);

@@ -3,7 +3,7 @@
 
 {block name=body}
   <div>{$msg}</div>
-  <form action="/" method="post">
+  <form action="/users" method="post">
     <div>
       <input type="text" name="name">
     </div>
