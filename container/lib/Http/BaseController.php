@@ -9,9 +9,10 @@ use Smarty;
 
 class BaseController {
 
+  protected $template_ext = '.tpl';
   private $name = 'controller';
 
-  protected $template_ext = '.tpl';
+  private const CACHE_DIR = '../var/cache/views';
 
   public function __construct() {}
 
@@ -41,15 +42,8 @@ class BaseController {
   {
     $smarty = new Smarty();
 
-    $smarty->template_dir = '../views/';
-    $smarty->compile_dir  = '../var/cache/views';
-    $smarty->escape_html  = true;
-
-    $smarty->assign([]);
-    if(is_null($param)) {
-      $param = [];
-    }
-    $smarty->assign($param);
+    $this->setTemplateDirs($smarty, '../views/')
+      ->setTemplateAssigns($smarty, [$param]);
 
     $this->registerSmartyHelper($smarty, 'function', FunctionHelper::class);
 
@@ -57,6 +51,38 @@ class BaseController {
     $template = str_replace('.', DIRECTORY_SEPARATOR, $template);
 
     return $smarty->fetch($template . $this->template_ext);
+  }
+
+  /**
+   * set root dir path that exists views file
+   *
+   * @param Smarty $smarty
+   * @param string $template_dir
+   * @param string $compile_dir
+   * @return \Plum\Http\BaseController
+   */
+  private function setTemplateDirs(Smarty $smarty, string $template_dir, string $compile_dir = BaseController::CACHE_DIR): self
+  {
+    $smarty->template_dir = $template_dir;
+    $smarty->compile_dir  = $compile_dir;
+    $smarty->escape_html  = true;
+
+    return $this;
+  }
+
+  /**
+   * set assigns value for template
+   *
+   * @param Smarty $smarty
+   * @param array $assigns
+   * @return \Plum\Http\BaseController
+   */
+  private function setTemplateAssigns(Smarty $smarty, array $assigns): self
+  {
+    foreach ($assigns as $value) {
+      $smarty->assign($value);
+    }
+    return $this;
   }
 
   /**
