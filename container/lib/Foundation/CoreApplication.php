@@ -11,7 +11,7 @@ class CoreApplication {
   protected $base_path;
 
   public function __construct(string $base_path) {
-    $this->base_path = $base_path;
+    $this->base_path = $base_path.DIRECTORY_SEPARATOR;
     Env::setPath($this->base_path);
 
     $this->boot();

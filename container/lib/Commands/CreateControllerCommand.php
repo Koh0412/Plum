@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CreateControllerCommand extends Command {
   // the name of the command (the part after "bin/console")
   protected static $defaultName = 'make:controller';
-  protected $base_path = 'app/controllers';
+  protected $base_path = 'app/Controllers';
 
   public function __construct()
   {
@@ -34,7 +34,7 @@ class CreateControllerCommand extends Command {
   protected function execute(InputInterface $input, OutputInterface $output)
   {
 
-    get_buffer(function() use ($output, $input) {
+    getBuffer(function() use ($output, $input) {
       $progressbar = new ProgressBar($output, 10);
 
       $controller = $input->getArgument('controller');
