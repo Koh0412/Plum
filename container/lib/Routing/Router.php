@@ -78,6 +78,7 @@ class Router extends BaseService implements IMiddleware {
    */
   public function group(string $root, array $routers): Router
   {
+    // TODO: $routersをClorsureにしたい
     foreach ($routers as $route => $prop) {
       $route = $root . $route;
       $action = $prop['action'] ?? null;

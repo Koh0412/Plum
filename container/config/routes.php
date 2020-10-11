@@ -6,7 +6,10 @@ use App\Controllers\UserController;
 $router = router();
 
 $router->get('/', HomeController::class, 'index');
-$router->get('/users/{id:\d+}', UserController::class, 'show');
-$router->post('/users', UserController::class, 'create');
+$router->group('/users', [
+  '' => ['method' => 'POST', 'controller' => UserController::class, 'action' => 'create'],
+  '/{id:\d+}' => ['method' => 'GET', 'controller' => UserController::class, 'action' => 'show'],
+  '/new' => ['method' => 'GET', 'controller' => UserController::class, 'action' => 'new'],
+]);
 
 return $router;

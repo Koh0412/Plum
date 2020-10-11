@@ -36,6 +36,13 @@ class FunctionHelper {
       'href' => "$domain/$path"
     ]);
   }
+
+  public static function route(array $param)
+  {
+    $domain = request()->schemeHost();
+    $path = $param['path'];
+    return "$domain/$path";
+  }
 }
 
 /**

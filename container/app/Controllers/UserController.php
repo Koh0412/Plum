@@ -15,8 +15,24 @@ class UserController extends ApplicationController {
     return $this->view('users.show', ['user' => $user]);
   }
 
+  public function new()
+  {
+    return $this->view('users.new');
+  }
+
   public function create(Request $request)
   {
-    return "created. name: {$request->name}";
+    $model = User::model()->create();
+
+    $properties = [
+      'name' => $request->name,
+      'age' => $request->age
+    ];
+    $model->set($properties);
+
+    $model->save();
+    return 'ok';
+    // TODO: redirect関数を作る
+    // header('Location: http://localhost:8010');
   }
 }
