@@ -46,3 +46,18 @@ if (!function_exists('rootDir')) {
     return realpath($path);
   }
 }
+
+if (!function_exists('redirect')) {
+
+  /**
+   * redirect helper.
+   * if you redirect to home, you should not set `$to`
+   *
+   * @param mixed|null $to
+   * @return void
+   */
+  function redirect($to = null) {
+    $host = request()->schemeHost();
+    return header("Location: $host/$to");
+  }
+}

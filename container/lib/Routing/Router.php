@@ -10,6 +10,8 @@ class Router extends BaseService implements IMiddleware {
 
   private $routers = [];
 
+  private $prefix = '';
+
   protected function __construct() {}
 
   /**
@@ -70,31 +72,20 @@ class Router extends BaseService implements IMiddleware {
   }
 
   /**
-   * router grouping
+   * grouping router with prefix.
+   * contents of callable should be routing method.
+   * also, the arguments of callable function is this object.
    *
-   * @param string $root
-   * @param array $routers
-   * @return \Plum\Routing\Router
+   * @param string $prefix
+   * @param \Closure $callable
+   * @return Plum\Routing\Router
    */
-  public function group(string $root, array $routers): Router
+  public function group(string $prefix, \Closure $callable): Router
   {
-    // TODO: $routersをClorsureにしたい
-    foreach ($routers as $route => $prop) {
-      $route = $root . $route;
-      $action = $prop['action'] ?? null;
+    $this->prefix = $prefix;
+    $callable($this);
+    $this->prefix = '';
 
-      $condition = strtoupper($prop['method']);
-      $map = array(
-        'GET' => function() use ($route, $prop, $action) {
-          $this->get($route, $prop['controller'], $action);
-        },
-        'POST' => function() use ($route, $prop, $action) {
-          $this->post($route, $prop['controller'], $action);
-        }
-      );
-
-      $this->lookForMap($condition, $map);
-    }
     return $this;
   }
 
@@ -112,6 +103,10 @@ class Router extends BaseService implements IMiddleware {
       $handler = 'App\Controllers\\' . $controller;
     } else {
       $handler = $controller.static::METHOD_DELIMITER.$action;
+    }
+
+    if ($this->prefix !== '') {
+      $route = $this->prefix.$route;
     }
 
     $router = [

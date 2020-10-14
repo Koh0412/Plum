@@ -30,7 +30,7 @@ class Env {
   public static function get(string $key)
   {
       if((self::$dotenv instanceof Dotenv) === false) {
-          if (empty(Env::$base_path)) {
+          if (Env::$base_path !== '') {
             throw new Exception('dotenv path is empty. please set path');
           }
           self::$dotenv = Dotenv::createImmutable(Env::$base_path);

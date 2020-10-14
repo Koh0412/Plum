@@ -9,12 +9,16 @@ use Smarty;
 
 class BaseController {
 
-  protected $template_ext = '.tpl';
+  public $template_ext = '.tpl';
+
+  private $_request;
   private $name = 'controller';
 
   private const CACHE_DIR = '../var/cache/views';
 
-  public function __construct() {}
+  public function __construct(Request $request) {
+    $this->_request = $request;
+  }
 
   /**
    * output log
@@ -51,6 +55,11 @@ class BaseController {
     $template = str_replace('.', DIRECTORY_SEPARATOR, $template);
 
     return $smarty->fetch($template . $this->template_ext);
+  }
+
+  public function request()
+  {
+    return $this->_request;
   }
 
   /**

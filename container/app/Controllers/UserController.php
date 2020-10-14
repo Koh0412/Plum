@@ -3,12 +3,11 @@
 namespace App\Controllers;
 
 use App\Models\User;
-use Plum\Http\Request;
 use Plum\Routing\RouteParameters;
 
 class UserController extends ApplicationController {
 
-  public function show($_, RouteParameters $params)
+  public function show(RouteParameters $params)
   {
     $user = User::find_one($params->id);
     // TODO: modelがない(存在しないrecordのIDを入れる等)場合は404に
@@ -20,19 +19,14 @@ class UserController extends ApplicationController {
     return $this->view('users.new');
   }
 
-  public function create(Request $request)
+  public function create()
   {
-    $model = User::model()->create();
-
     $properties = [
-      'name' => $request->name,
-      'age' => $request->age
+      'name' => $this->request()->name,
+      'age' => $this->request()->age
     ];
-    $model->set($properties);
 
-    $model->save();
-    return 'ok';
-    // TODO: redirect関数を作る
-    // header('Location: http://localhost:8010');
+    User::setModel($properties)->save();
+    return redirect();
   }
 }

@@ -30,6 +30,20 @@ class BaseModel extends Model {
     $instance = new static;
     return Model::factory(static::class);
   }
+
+  /**
+   * Set a property to a particular value on this object.
+   *
+   * @param array $properties
+   * @return \ORMWrapper|bool
+   */
+  public static function setModel(array $properties)
+  {
+    $model = static::model()->create();
+    $model->set($properties);
+    return $model;
+  }
+
   /**
    * set table you use name
    *

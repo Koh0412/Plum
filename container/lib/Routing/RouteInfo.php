@@ -99,6 +99,6 @@ class RouteInfo extends BaseService {
     $params = $this->routeParameters();
 
     list($class, $method) = explode(static::METHOD_DELIMITER, $handler, 2);
-    echo (new $class())->$method(request(), $params);
+    echo (new $class(request()))->$method($params);
   }
 }
