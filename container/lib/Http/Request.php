@@ -47,7 +47,7 @@ class Request extends BaseService {
   public function query(string $name, $default = null)
   {
     if (isset($_GET[$name])) {
-      return htmlspecialchars($_GET[$name]);
+      return htmlEscape($_GET[$name]);
     }
     return $default;
   }

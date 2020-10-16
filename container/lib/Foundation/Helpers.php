@@ -61,3 +61,10 @@ if (!function_exists('redirect')) {
     return header("Location: $host/$to");
   }
 }
+
+if (!function_exists('htmlEscape')) {
+
+  function htmlEscape($str) {
+    return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
+  }
+}

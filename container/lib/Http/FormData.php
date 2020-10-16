@@ -30,15 +30,14 @@ class FormData {
    */
   public function value(string $name, $default = null)
   {
-    if (isset($_POST[$name])) {
-      $post = $_POST[$name];
-
+    $post = filter_input(INPUT_POST, $name);
+    if ($post !== null) {
       if (is_array($post)) {
         return array_map(function($p) {
-          return htmlspecialchars($p);
+          return htmlEscape($p);
         }, $post);
       }
-      return htmlspecialchars($post);
+      return htmlEscape($post);
     }
     return $default;
   }
@@ -86,7 +85,7 @@ class FormData {
   {
     $value = $this->value($name);
 
-    if (isset($value)) {
+    if ($value !== null) {
       session_cache_expire($expire);
       session_start();
 
