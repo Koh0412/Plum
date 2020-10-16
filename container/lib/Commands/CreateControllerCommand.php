@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateControllerCommand extends Command {
+  use CommandTrait;
   // the name of the command (the part after "bin/console")
   protected static $defaultName = 'make:controller';
   protected $base_path = 'app/Controllers';
@@ -49,7 +50,7 @@ class CreateControllerCommand extends Command {
       readfile($filename);
 
       $output->writeln($progressbar->finish());
-      $output->writeln("<info>create controller: {$controller} -> successfully.</info>");
+      $output->writeln($this->success("create controller: {$controller} -> successfully."));
     });
 
     return Command::SUCCESS;
