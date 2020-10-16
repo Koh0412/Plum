@@ -47,4 +47,15 @@ trait CommandTrait {
   {
     return "<question>{$text}</question>";
   }
+
+  /**
+   *  output text to command line with cyan text
+   *
+   * @param string $text
+   * @return string
+   */
+  public function info(string $text): string
+  {
+    return "<fg=cyan;bg=black>{$text}</>";
+  }
 }
