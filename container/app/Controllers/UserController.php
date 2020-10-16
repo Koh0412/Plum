@@ -21,13 +21,12 @@ class UserController extends ApplicationController {
 
   public function create()
   {
-    return var_dump($this->request()->formData()->value('name'));
-    // $properties = [
-    //   'name' => $this->request()->name,
-    //   'age' => $this->request()->age
-    // ];
+    $properties = [
+      'name' => $this->request()->name,
+      'age' => $this->request()->age
+    ];
 
-    // User::setModel($properties)->save();
-    // return redirect();
+    User::setModel($properties)->save();
+    return redirect();
   }
 }
