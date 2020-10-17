@@ -8,8 +8,10 @@ class TemplateMaker {
   private $contents;
   private $template;
 
-  public function __construct(string $file_name) {
-    $this->contents = file_get_contents(__DIR__."/Template/{$file_name}.php.tt");
+  private const TEMPLATE_PATH = __DIR__.'/Template';
+
+  public function __construct(string $file_name, ?string $template_path = TemplateMaker::TEMPLATE_PATH) {
+    $this->contents = file_get_contents($template_path."/{$file_name}.php.tt");
   }
 
   /**
