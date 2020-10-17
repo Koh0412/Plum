@@ -2,6 +2,7 @@
 
 namespace Plum\Commands;
 
+use Plum\File\TemplateMaker;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
@@ -46,25 +47,13 @@ class CreateControllerCommand extends Command {
         $progressbar->advance();
       }
 
-      file_put_contents($filename, $this->template(['controller' => $controller]));
-      readfile($filename);
+      $tMaker = new TemplateMaker('controller');
+      $tMaker->make([ 'controller' => $controller ])->output($filename);
 
       $output->writeln($progressbar->finish());
       $output->writeln($this->success("create controller: {$controller} -> successfully."));
     });
 
     return Command::SUCCESS;
-  }
-
-  private function template(array $data)
-  {
-    $template = <<<EOF
-    <?php\n
-    namespace App\Controllers;\n
-    class {$data['controller']} extends ApplicationController {
-    }\n
-    EOF;
-
-    return $template;
   }
 }
