@@ -1,0 +1,12 @@
+<?php
+
+namespace App\Models;
+
+use Plum\Database\BaseModel;
+
+class $class extends BaseModel {
+
+  public function __construct() {
+    // must be set table name use $this->setTable
+  }
+}

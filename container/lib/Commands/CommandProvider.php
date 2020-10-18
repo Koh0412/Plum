@@ -6,7 +6,8 @@ class Commandprovider {
   public static function commands()
   {
     return [
-      new CreateControllerCommand
+      new CreateControllerCommand,
+      new CreateModelCommand
     ];
   }
 
