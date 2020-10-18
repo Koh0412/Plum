@@ -5,16 +5,25 @@ namespace Plum\Commands;
 class Commandprovider {
   public static function commands()
   {
-    return [
-      new CreateControllerCommand,
-      new CreateModelCommand
+    $classes = [
+      CreateController::class,
+      CreateModel::class,
     ];
+    return Commandprovider::instanceMap($classes);
   }
 
   public static function internals()
   {
-    return [
-      new CreateCommandFile
+    $classes = [
+      CreateCommandFile::class
     ];
+    return Commandprovider::instanceMap($classes);
+  }
+
+  private static function instanceMap($classes)
+  {
+    return array_map(function($class) {
+      return new $class();
+    }, $classes);
   }
 }
