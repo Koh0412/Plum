@@ -2,17 +2,16 @@
 
 namespace Plum\Commands;
 
-use Plum\File\TemplateMaker;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CreateControllerCommand extends Command {
+class $class extends Command {
   use CommandTrait;
+
   // the name of the command (the part after "bin/console")
-  protected static $defaultName = 'make:controller';
-  protected $base_path = 'app/Controllers';
+  protected static $defaultName = '';
 
   public function __construct()
   {
@@ -27,24 +26,13 @@ class CreateControllerCommand extends Command {
   protected function configure()
   {
     $this
-      ->setDescription('Creates a new controller.')
-      ->setHelp('This command allows you to create a controller...')
-      ->addArgument('controller', InputArgument::REQUIRED, 'The name of the controller.');
+      ->setDescription('')
+      ->setHelp('');
   }
 
   protected function execute(InputInterface $input, OutputInterface $output)
   {
-
-    getBuffer(function() use ($output, $input) {
-      $controller = $input->getArgument('controller');
-      $filename = "{$this->base_path}/{$controller}.php";
-
-      $tMaker = new TemplateMaker('controller');
-      $tMaker->make(['controller' => $controller])->output($filename);
-
-      $output->writeln($this->success("create controller: {$controller} -> successfully."));
-    });
-
+    // excute this process if you run command line
     return Command::SUCCESS;
   }
 }

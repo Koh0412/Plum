@@ -8,11 +8,10 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CreateControllerCommand extends Command {
+class CreateCommandFile extends Command {
   use CommandTrait;
   // the name of the command (the part after "bin/console")
-  protected static $defaultName = 'make:controller';
-  protected $base_path = 'app/Controllers';
+  protected static $defaultName = 'make:command';
 
   public function __construct()
   {
@@ -27,22 +26,22 @@ class CreateControllerCommand extends Command {
   protected function configure()
   {
     $this
-      ->setDescription('Creates a new controller.')
-      ->setHelp('This command allows you to create a controller...')
-      ->addArgument('controller', InputArgument::REQUIRED, 'The name of the controller.');
+      ->setDescription('Creates a new command file.')
+      ->setHelp('This command allows you to create a command file...')
+      ->addArgument('filename', InputArgument::REQUIRED, 'The name of the command file.');
   }
 
   protected function execute(InputInterface $input, OutputInterface $output)
   {
 
     getBuffer(function() use ($output, $input) {
-      $controller = $input->getArgument('controller');
-      $filename = "{$this->base_path}/{$controller}.php";
+      $name = $input->getArgument('filename');
+      $filename = __DIR__."/{$name}.php";
 
-      $tMaker = new TemplateMaker('controller');
-      $tMaker->make(['controller' => $controller])->output($filename);
+      $tMaker = new TemplateMaker('command');
+      $tMaker->make(['class' => $name])->output($filename);
 
-      $output->writeln($this->success("create controller: {$controller} -> successfully."));
+      $output->writeln($this->success("create command file: {$name} -> successfully."));
     });
 
     return Command::SUCCESS;
