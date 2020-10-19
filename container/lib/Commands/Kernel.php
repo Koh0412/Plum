@@ -15,7 +15,7 @@ class Kernel {
     $this->console = new ConsoleApplication();
   }
 
-  public function run(?InputInterface $input = null, ?OutputInterface $output = null)
+  public function run(?InputInterface $input = null, ?OutputInterface $output = null): void
   {
     if (is_null($this->type)) {
       $this->setConsoleType('normal');
@@ -31,7 +31,7 @@ class Kernel {
    * @param string $type
    * @return void
    */
-  public function setConsoleType(string $type)
+  public function setConsoleType(string $type): void
   {
     $this->type = $type;
   }
@@ -42,7 +42,7 @@ class Kernel {
    * @param array $commands
    * @return void
    */
-  public function addCommands(array $commands)
+  public function addCommands(array $commands): void
   {
     $this->console->addCommands($commands);
   }
@@ -51,9 +51,9 @@ class Kernel {
    * run add command method match type
    *
    * @param string $type
-   * @return void
+   * @return Plum\Commands\Kernel
    */
-  public function runCommandMap(string $type)
+  public function runCommandMap(string $type): self
   {
     $map = [
       'normal' => function() { $this->addCommands(Commandprovider::commands()); },
