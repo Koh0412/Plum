@@ -35,7 +35,7 @@ class CreateModel extends Command {
 
   protected function execute(InputInterface $input, OutputInterface $output)
   {
-    // excute this process if you run command line
+    // execute this process if you run command line
     getBuffer(function() use ($input, $output) {
       $model = $input->getArgument('model');
       $filename = "{$this->base_path}/{$model}.php";

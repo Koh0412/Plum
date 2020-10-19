@@ -26,10 +26,10 @@ class BaseService {
    */
   protected function lookForMap(string $condition, array $map): void
   {
-    $excute = $map[$condition];
+    $execute = $map[$condition];
 
-    if (isset($excute)) {
-      $excute();
+    if (isset($execute)) {
+      $execute();
     } else {
       throw new Exception("this condition: {$condition} is not available in this map.");
     }

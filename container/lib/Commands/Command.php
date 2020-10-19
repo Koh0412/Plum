@@ -1,12 +1,14 @@
 #!/usr/bin/php
 <?php
 
-use Plum\Commands\Commandprovider;
-use Symfony\Component\Console\Application;
+use Plum\Commands\Kernel;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-$app = new Application();
-$app->addCommands(Commandprovider::internals());
+$kernel = new Kernel();
+$kernel->setConsoleType('develop');
 
-$app->run();
+$kernel->run(
+  new Symfony\Component\Console\Input\ArgvInput,
+  new Symfony\Component\Console\Output\ConsoleOutput
+);

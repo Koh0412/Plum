@@ -3,10 +3,11 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-use Plum\Commands\Commandprovider;
-use Symfony\Component\Console\Application;
+use Plum\Commands\Kernel;
 
-$application = new Application();
-$application->addCommands(Commandprovider::commands());
+$kernel = new Kernel();
 
-$application->run();
+$kernel->run(
+  new Symfony\Component\Console\Input\ArgvInput,
+  new Symfony\Component\Console\Output\ConsoleOutput
+);
