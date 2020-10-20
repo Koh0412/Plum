@@ -27,7 +27,7 @@ class CreateController extends Command {
   protected function configure()
   {
     $this
-      ->setDescription('Creates a new controller.')
+      ->setDescription('Create a new controller.')
       ->setHelp('This command allows you to create a controller...')
       ->addArgument('controller', InputArgument::REQUIRED, 'The name of the controller.');
   }

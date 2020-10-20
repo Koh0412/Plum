@@ -28,7 +28,7 @@ class CreateModel extends Command {
   protected function configure()
   {
     $this
-      ->setDescription('Creates a new model.')
+      ->setDescription('Create a new model.')
       ->setHelp('This command allows you to create a model...')
       ->addArgument('model', InputArgument::REQUIRED, 'The name of the model.');
   }

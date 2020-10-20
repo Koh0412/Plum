@@ -26,7 +26,7 @@ class CreateCommandFile extends Command {
   protected function configure()
   {
     $this
-      ->setDescription('Creates a new command file.')
+      ->setDescription('Create a new command file.')
       ->setHelp('This command allows you to create a command file...')
       ->addArgument('filename', InputArgument::REQUIRED, 'The name of the command file.');
   }

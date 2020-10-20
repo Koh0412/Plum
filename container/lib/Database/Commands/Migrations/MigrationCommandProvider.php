@@ -7,7 +7,8 @@ use Plum\Commands\BaseCommandProvider;
 class MigrationCommandProvider extends BaseCommandProvider {
 
   protected $commands = [
-    MigrateInit::class
+    MigrateInit::class,
+    MigrateStatus::class
   ];
 
   public function commands(): array

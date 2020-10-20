@@ -1,20 +1,17 @@
 <?php
 
-namespace Plum\Database\Commands\Migrations;
+namespace Plum\Commands;
 
-use Phinx\Console\Command\AbstractCommand;
-use Phinx\Console\Command\Init;
-use Plum\Commands\CommandTrait;
+use Phinx\Console\Command\Create;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class MigrateInit extends Init {
+class CreateMigration extends Create {
   use CommandTrait;
 
   // the name of the command (the part after "bin/console")
-  protected static $defaultName = 'migrate:init';
+  protected static $defaultName = 'make:migration';
 
   public function __construct()
   {
@@ -28,20 +25,7 @@ class MigrateInit extends Init {
 
   protected function configure()
   {
-    $this->setDescription('Initialize the application for Phinx')
-      ->addOption(
-        '--format',
-        '-f',
-        InputArgument::OPTIONAL,
-        'What format should we use to initialize?',
-        AbstractCommand::FORMAT_YML
-      )
-      ->addArgument('path', InputArgument::OPTIONAL, 'Which path should we initialize for Phinx?')
-      ->setHelp(sprintf(
-        '%sInitializes the application for Phinx%s',
-        PHP_EOL,
-        PHP_EOL
-      ));
+    parent::configure();
   }
 
   protected function execute(InputInterface $input, OutputInterface $output)

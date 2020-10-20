@@ -8,7 +8,8 @@ class Commandprovider extends BaseCommandProvider {
 
   protected $commands = [
     CreateController::class,
-    CreateModel::class
+    CreateModel::class,
+    CreateMigration::class
   ];
 
   public function __construct() {
