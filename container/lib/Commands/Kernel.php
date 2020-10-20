@@ -2,38 +2,31 @@
 
 namespace Plum\Commands;
 
-use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
+use Plum\Database\Commands\Migrations\MigrationCommandProvider;
 use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class Kernel {
-  protected $console;
-  protected $type;
+
+  private $console;
+  /** @var BaseCommandProvider */
+  private $providers = [];
 
   public function __construct() {
     $this->console = new ConsoleApplication();
+    $this->providers = [
+      new Commandprovider,
+      new MigrationCommandProvider
+    ];
   }
 
   public function run(?InputInterface $input = null, ?OutputInterface $output = null): void
   {
-    if (is_null($this->type)) {
-      $this->setConsoleType('normal');
+    foreach ($this->providers as $provider) {
+      $this->addCommands($provider->commands());
     }
-
-    $this->runCommandMap($this->type);
     $this->console->run($input, $output);
-  }
-
-  /**
-   * available type is `normal`, `develop`
-   *
-   * @param string $type
-   * @return void
-   */
-  public function setConsoleType(string $type): void
-  {
-    $this->type = $type;
   }
 
   /**
@@ -45,28 +38,5 @@ class Kernel {
   public function addCommands(array $commands): void
   {
     $this->console->addCommands($commands);
-  }
-
-  /**
-   * run add command method match type
-   *
-   * @param string $type
-   * @return Plum\Commands\Kernel
-   */
-  public function runCommandMap(string $type): self
-  {
-    $map = [
-      'normal' => function() { $this->addCommands(Commandprovider::commands()); },
-      'develop' => function() { $this->addCommands(Commandprovider::internals()); }
-    ];
-    $execute = $map[$type];
-
-    if (isset($execute)) {
-      $execute();
-    } else {
-      throw new InvalidTypeException("Type: {$type} is invalid");
-    }
-
-    return $this;
   }
 }
