@@ -7,3 +7,5 @@
 
 # env file
 /.env
+
+/phinx.*
