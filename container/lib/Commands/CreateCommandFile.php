@@ -59,10 +59,4 @@ class CreateCommandFile extends Command {
 
     return Command::SUCCESS;
   }
-
-  private function outputFileExistError(OutputInterface $output, string $filename)
-  {
-    $output->writeln($this->error("file: {$filename} is already exists."));
-    die();
-  }
 }

@@ -2,6 +2,8 @@
 
 namespace Plum\Commands;
 
+use Symfony\Component\Console\Output\OutputInterface;
+
 trait CommandTrait {
 
   /**
@@ -57,5 +59,11 @@ trait CommandTrait {
   public function info(string $text): string
   {
     return "<fg=cyan;bg=black>{$text}</>";
+  }
+
+  private function outputFileExistError(OutputInterface $output, string $filename)
+  {
+    $output->writeln($this->error("file: {$filename} is already exists."));
+    die();
   }
 }
