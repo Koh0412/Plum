@@ -47,6 +47,10 @@ class CreateCommandFile extends Command {
 
       $filename = $option_dir."/{$name}.php";
 
+      if (file_exists($filename)) {
+        $this->outputFileExistError($output, $filename);
+      }
+
       $tMaker = new TemplateMaker('command');
       $tMaker->make(['class' => $name])->output($filename);
 
@@ -54,5 +58,11 @@ class CreateCommandFile extends Command {
     });
 
     return Command::SUCCESS;
+  }
+
+  private function outputFileExistError(OutputInterface $output, string $filename)
+  {
+    $output->writeln($this->error("file: {$filename} is already exists."));
+    die();
   }
 }

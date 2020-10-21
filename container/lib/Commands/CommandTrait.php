@@ -21,7 +21,7 @@ trait CommandTrait {
    * @param string $text
    * @return string
    */
-  public function error(string $text): string
+  public function warning(string $text): string
   {
     return "<comment>{$text}</comment>";
   }
@@ -32,7 +32,7 @@ trait CommandTrait {
    * @param string $text
    * @return string
    */
-  public function warning(string $text): string
+  public function error(string $text): string
   {
     return "<error>{$text}</error>";
   }

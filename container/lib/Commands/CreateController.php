@@ -39,6 +39,10 @@ class CreateController extends Command {
       $controller = $input->getArgument('controller');
       $filename = "{$this->base_path}/{$controller}.php";
 
+      if (file_exists($filename)) {
+        $this->outputFileExistError($output, $filename);
+      }
+
       $tMaker = new TemplateMaker('controller');
       $tMaker->make(['controller' => $controller])->output($filename);
 
@@ -46,5 +50,11 @@ class CreateController extends Command {
     });
 
     return Command::SUCCESS;
+  }
+
+  private function outputFileExistError(OutputInterface $output, string $filename)
+  {
+    $output->writeln($this->error("file: {$filename} is already exists."));
+    die();
   }
 }

@@ -40,11 +40,21 @@ class CreateModel extends Command {
       $model = $input->getArgument('model');
       $filename = "{$this->base_path}/{$model}.php";
 
+      if (file_exists($filename)) {
+        $this->outputFileExistError($output, $filename);
+      }
+
       $tMaker = new TemplateMaker('model');
       $tMaker->make(['class' => $model])->output($filename);
 
       $output->writeln($this->success("create model file: {$filename} -> successfully."));
     });
     return Command::SUCCESS;
+  }
+
+  private function outputFileExistError(OutputInterface $output, string $filename)
+  {
+    $output->writeln($this->error("file: {$filename} is already exists."));
+    die();
   }
 }
