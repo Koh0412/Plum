@@ -19,8 +19,5 @@
         "files": [
             "lib/foundation/Helpers.php"
         ]
-    },
-    "scripts": {
-      "phinx": "vendor/bin/phinx"
     }
 }

@@ -42,7 +42,7 @@ class CreateController extends Command {
       $tMaker = new TemplateMaker('controller');
       $tMaker->make(['controller' => $controller])->output($filename);
 
-      $output->writeln($this->success("create controller: {$controller} -> successfully."));
+      $output->writeln($this->success("create controller file: {$filename} -> successfully."));
     });
 
     return Command::SUCCESS;

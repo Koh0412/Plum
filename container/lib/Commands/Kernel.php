@@ -3,6 +3,7 @@
 namespace Plum\Commands;
 
 use Plum\Database\Commands\Migrations\MigrationCommandProvider;
+use Plum\Database\Commands\Seeds\SeedCommandProvider;
 use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -17,7 +18,8 @@ class Kernel {
     $this->console = new ConsoleApplication();
     $this->providers = [
       new Commandprovider,
-      new MigrationCommandProvider
+      new MigrationCommandProvider,
+      new SeedCommandProvider
     ];
   }
 

@@ -28,7 +28,14 @@ class CreateCommandFile extends Command {
     $this
       ->setDescription('Create a new command file.')
       ->setHelp('This command allows you to create a command file...')
-      ->addArgument('filename', InputArgument::REQUIRED, 'The name of the command file.');
+      ->addArgument('filename', InputArgument::REQUIRED, 'The name of the command file.')
+      ->addOption(
+        '--dir',
+        '-d',
+        InputArgument::OPTIONAL,
+        'Target output destination directory',
+        __DIR__
+      );
   }
 
   protected function execute(InputInterface $input, OutputInterface $output)
@@ -36,12 +43,14 @@ class CreateCommandFile extends Command {
 
     getBuffer(function() use ($output, $input) {
       $name = $input->getArgument('filename');
-      $filename = __DIR__."/{$name}.php";
+      $option_dir = $input->getOption('dir');
+
+      $filename = $option_dir."/{$name}.php";
 
       $tMaker = new TemplateMaker('command');
       $tMaker->make(['class' => $name])->output($filename);
 
-      $output->writeln($this->success("create command file: {$name} -> successfully."));
+      $output->writeln($this->success("create command file: {$filename} -> successfully."));
     });
 
     return Command::SUCCESS;

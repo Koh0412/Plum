@@ -43,7 +43,7 @@ class CreateModel extends Command {
       $tMaker = new TemplateMaker('model');
       $tMaker->make(['class' => $model])->output($filename);
 
-      $output->writeln($this->success("create model: {$model} -> successfully."));
+      $output->writeln($this->success("create model file: {$filename} -> successfully."));
     });
     return Command::SUCCESS;
   }

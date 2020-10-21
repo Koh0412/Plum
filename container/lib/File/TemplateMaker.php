@@ -3,6 +3,7 @@
 namespace Plum\File;
 
 use Exception;
+use Plum\Routing\FileNotFoundException;
 
 class TemplateMaker {
   private $contents;
@@ -11,7 +12,12 @@ class TemplateMaker {
   private const TEMPLATE_PATH = __DIR__.'/Template';
 
   public function __construct(string $file_name, ?string $template_path = TemplateMaker::TEMPLATE_PATH) {
-    $this->contents = file_get_contents($template_path."/{$file_name}.php.tt");
+    $path = $template_path."/{$file_name}.php.tt";
+    $this->contents = file_get_contents($path);
+
+    if (!$this->contents) {
+      throw new FileNotFoundException($path);
+    }
   }
 
   /**
